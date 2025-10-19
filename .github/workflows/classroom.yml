@@ -25,7 +25,7 @@ jobs:
         uses: classroom-resources/autograding-command-grader@v1
         with:
           test-name: "Compile tests"
-          command: python3 main.py --check 
+          command: python3 main.py --check < data/data.txt
           timeout: 30
           max-score: 10
 

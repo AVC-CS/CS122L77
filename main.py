@@ -5,7 +5,8 @@ def getInput():
     Code Your Program here
     ########################################
     """
-
+    numbers = list(map(int, input().split()))
+    return numbers
 
 def evenList(numbers):
     """
@@ -13,7 +14,11 @@ def evenList(numbers):
     Code Your Program here
     ########################################
     """
-
+    result = []
+    N = len(numbers) // 2 + len(numbers) % 2
+    for i in range(N):
+        result.append(numbers.pop(i))
+    return result
 
 def main():
     numbers = getInput()

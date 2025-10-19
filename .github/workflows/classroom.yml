@@ -1,0 +1,77 @@
+name: GitHub Classroom Workflow
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  repository_dispatch:
+
+permissions:
+  checks: write
+  actions: read
+  contents: read
+
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # ---- Grader 1: compile tests ----
+      - name: Compile tests
+        id: compile
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: "Compile tests"
+          command: python3 main.py --check 
+          timeout: 30
+          max-score: 10
+
+      # Install pytest once for the next graders
+      - name: Install pytest
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install pytest
+
+      # ---- Grader 3: pytest -m basic (4 pts) ----
+      - name: Basic tests
+        id: basic
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: "Basic tests"
+          command: pytest -rP -m basic
+          timeout: 10
+          max-score: 10
+
+      # ---- Grader 4: pytest -m edge (2 pts) ----
+      - name: Edge tests
+        id: edge
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: "Edge tests"
+          command: pytest -rP -m edge
+          timeout: 10
+          max-score: 10
+
+      # ---- Optional: Bonus tests  ----
+      - name: Bonus tests 
+        id: bonus
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: "Bonus tests"
+          command: pytest -rP -m bonus
+          timeout: 10
+          max-score: 10
+
+      # ---- Reporter: show score on Classroom ----
+      - name: Autograding Reporter
+        uses: classroom-resources/autograding-grading-reporter@v1
+        env:
+          COMPILE_RESULTS: "${{ steps.compile.outputs.result }}"
+          BASIC_RESULTS: "${{ steps.basic.outputs.result }}"
+          EDGE_RESULTS: "${{ steps.edge.outputs.result }}"
+          BONUS_RESULTS: "${{ steps.bonus.outputs.result }}"
+        with:
+          runners: compile,basic,edge,bonus

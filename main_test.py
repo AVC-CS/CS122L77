@@ -2,8 +2,9 @@ import main
 import io
 import sys
 import re
+import pytest
 
-
+@pytest.mark.basic
 def test_main_1():
     captureOut = io.StringIO()
     sys.stdout = captureOut
@@ -21,18 +22,10 @@ def test_main_1():
     ret = main.evenList(numbers)
     print(f'Your return values {ret}')
     print(f'The remainder numbers in the original list {numbers}')
-    # regex_string = r'[\w,\W]*1'
-    # regex_string += r'[\w,\W]*3'
-    # regex_string += r'[\w,\W]*5'
-    # regex_string += r'[\w,\W]*'
-    # print(regex_string)
-    # res = re.search(regex_string, main.evenlist)
-    # assert res != None
-    # print(res.group())
     assert ret == [1, 3, 5]
     assert numbers == [2, 4]
 
-
+@pytest.mark.edge
 def test_main_2():
     captureOut = io.StringIO()
     sys.stdout = captureOut
@@ -51,13 +44,16 @@ def test_main_2():
     print(f'Your return values {ret}')
     print(f'The remainder numbers in the original list {numbers}')
 
-    # regex_string = r'[\w,\W]*1'
-    # regex_string += r'[\w,\W]*3'
-    # regex_string += r'[\w,\W]*5'
-    # regex_string += r'[\w,\W]*'
-    # print(regex_string)
-    # res = re.search(regex_string, main.evenlist)
-    # assert res != None
-    # print(res.group())
     assert ret == [1, 5, 2, 8, 2]
     assert numbers == [3, 4, 7, 1, 5]
+
+@pytest.mark.bonus
+def test_main_3():
+    numbers = [1] 
+    print(f'The list values {numbers}')
+    ret = main.evenList(numbers)
+    print(f'Your return values {ret}')
+    print(f'The remainder numbers in the original list {numbers}')
+
+    assert ret == [1]
+    assert numbers == []
